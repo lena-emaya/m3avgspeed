@@ -10,15 +10,53 @@
 
 
     <style>
-        body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
-    </style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            #map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+            }
+            
+
+            
+            .loader {
+                height: 100px;
+                width: 20%;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                margin: 0%;
+                z-index: 9999;
+            }
+            /*
+          Set the color of the icon
+        */
+            
+            svg path,
+            svg rect {
+                fill: #2EA7F9;
+            }
+            </style>
 </head>
 <body>
-
-<div id='map'></div>
-
-
+    
+    <div class="loader loader--style1" title="0" id="loader">
+        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+            <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+        s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+        c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
+            <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+        C22.32,8.481,24.301,9.057,26.013,10.047z">
+                <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="0.5s" repeatCount="indefinite" />
+            </path>
+        </svg>
+    </div>
+    <div id='map'></div>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoibGVuYWVtYXlhIiwiYSI6ImNpa3VhbXE5ZjAwMXB3eG00ajVyc2J6ZTIifQ.kmZ4yVcNrupl4H8EonM3aQ';
 const map = new mapboxgl.Map({
@@ -31,17 +69,17 @@ const map = new mapboxgl.Map({
 
 
 
-var framesPerSecond = 15; 
-var initialOpacity = 1
-var opacity = initialOpacity;
-var initialRadius = 12;
-var radius = initialRadius;
-var maxRadius = 25;
+// var framesPerSecond = 15; 
+// var initialOpacity = 1
+// var opacity = initialOpacity;
+// var initialRadius = 12;
+// var radius = initialRadius;
+// var maxRadius = 25;
 
 map.on('load', () => {
-    map.addSource("routes", {
-        type: "geojson",
-        data: "https://raw.githubusercontent.com/lena-emaya/m3avgspeed/master/data/m3avg.geojson"
+    map.addSource('roads', {
+        type: 'vector',
+        tiles: ["https://m3.urbica.co/tiles/public.len/{z}/{x}/{y}.pbf"],
     });
     map.addSource('circleData', {
         type: 'geojson',
@@ -55,7 +93,8 @@ map.on('load', () => {
     map.addLayer({
         id: "routes",
         type: "line",
-        source: "routes",
+        source: "roads",
+        'source-layer': 'public.len',
         paint: {
             "line-width": 1.5,
             "line-color": 
@@ -63,12 +102,11 @@ map.on('load', () => {
       "line-opacity": 0
     }
     });
-   
-    
     map.addLayer({
     id: "routes-light",
     type: "line",
-    source: "routes",
+    source: "roads",
+    'source-layer': 'public.len',
     paint: {
       "line-width": [
         "interpolate",
@@ -178,38 +216,23 @@ map.on('load', () => {
     //   ]
     },
     "filter": ["in", "route_id", ""]
-    });
-    
-    
+    }); 
     map.addLayer({
-        "id": "shield",
-        "type": "symbol",
-        "source": "routes",
+        id: "shield",
+        type: "symbol",
+        source: "roads",
+        'source-layer': 'public.len',
         "layout": {
-      "text-field": [
-        "to-string",
-        ["get", "number"]
-      ],
-      "symbol-placement": "line",
-      "text-size": 11,
-      "icon-size": 0.5,
-      "symbol-spacing": 300,
-      "icon-image": "bus_shield",
       "visibility": "none"
     },
         "paint": {
-      "text-color": "hsl(0, 4%, 100%)",
-            "icon-opacity": 1
         }
     });
-  
-    
-    
-    
     map.addLayer({
     "id": "shield-light",
     "type": "symbol",
-    "source": "routes",
+    source: "roads",
+    'source-layer': 'public.len',
     "layout": {
       "text-field": [
         "to-string",
@@ -238,17 +261,17 @@ map.on('load', () => {
     }
   });
     
-  map.addLayer({
-        id: 'data',
-        type: 'circle',
-        source: 'circleData',
-        paint: {
-            "circle-radius": initialRadius,
-            "circle-radius-transition": {duration: 0},
-            "circle-opacity-transition": {duration: 0},
-            "circle-color": "#2EA7F9"
-        },
-    });
+//   map.addLayer({
+//         id: 'data',
+//         type: 'circle',
+//         source: 'circleData',
+//         paint: {
+//             "circle-radius": initialRadius,
+//             "circle-radius-transition": {duration: 0},
+//             "circle-opacity-transition": {duration: 0},
+//             "circle-color": "#2EA7F9"
+//         },
+//     });
       map.addLayer({
         id: 'data1',
         type: 'circle',
@@ -261,22 +284,28 @@ map.on('load', () => {
         },
     });
 
- function animateMarker(timestamp) {
-        setTimeout(function(){
-            requestAnimationFrame(animateMarker);
-            radius += (maxRadius - radius) / framesPerSecond;
-            opacity -= ( .9 / framesPerSecond );
-            map.setPaintProperty('data', 'circle-radius', radius);
-            map.setPaintProperty('data', 'circle-opacity', opacity);
-            if (opacity <= 0) {
-                radius = initialRadius;
-                opacity = initialOpacity;
-            } 
-        }, 1000 / framesPerSecond);
+//  function animateMarker(timestamp) {
+//         setTimeout(function(){
+//             requestAnimationFrame(animateMarker);
+//             radius += (maxRadius - radius) / framesPerSecond;
+//             opacity -= ( .9 / framesPerSecond );
+//             map.setPaintProperty('data', 'circle-radius', radius);
+//             map.setPaintProperty('data', 'circle-opacity', opacity);
+//             if (opacity <= 0) {
+//                 radius = initialRadius;
+//                 opacity = initialOpacity;
+//             } 
+//         }, 1000 / framesPerSecond);
         
-    }
-    // Start the animation.
-    animateMarker(0);
+//     }
+//     // Start the animation.
+//     animateMarker(0);
+
+     map.on('data', function(e) {
+            if (e.dataType === 'source' && e.sourceId === 'roads') {
+                document.getElementById("loader").style.visibility = "hidden";
+            }
+        })
 
   map.on('click', e => {
         const bbox = [
