@@ -25,11 +25,11 @@
 
             
             .loader {
-                height: 100px;
-                width: 20%;
+                height: 150px;
+                width: 40%;
                 position: fixed;
-                top: 50%;
-                left: 50%;
+                top: 48%;
+                left: 48%;
                 margin: 0%;
                 z-index: 9999;
             }
@@ -46,7 +46,7 @@
 <body>
     
     <div class="loader loader--style1" title="0" id="loader">
-        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px" height="60px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
             <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
         s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
         c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
@@ -69,12 +69,12 @@ const map = new mapboxgl.Map({
 
 
 
-// var framesPerSecond = 15; 
-// var initialOpacity = 1
-// var opacity = initialOpacity;
-// var initialRadius = 12;
-// var radius = initialRadius;
-// var maxRadius = 25;
+var framesPerSecond = 15; 
+var initialOpacity = 1
+var opacity = initialOpacity;
+var initialRadius = 12;
+var radius = initialRadius;
+var maxRadius = 25;
 
 map.on('load', () => {
     map.addSource('roads', {
@@ -140,80 +140,6 @@ map.on('load', () => {
         20,
         "#2CEA62"
       ]
-    //   ,
-    //   "line-offset": [
-    //     "interpolate",
-    //     ["linear"],
-    //     ["zoom"],
-    //     9,
-    //     [
-    //       "match",
-    //       ["get", "color_id"],
-    //       1,
-    //       -5,
-    //       2,
-    //       -4,
-    //       3,
-    //       -3,
-    //       4,
-    //       -2,
-    //       5,
-    //       -1,
-    //       6,
-    //       2,
-    //       7,
-    //       3,
-    //       8,
-    //       1,
-    //       9,
-    //       4,
-    //       10,
-    //       3.7,
-    //       11,
-    //       1.7,
-    //       12,
-    //       2.4,
-    //       13,
-    //       3.6,
-    //       14,
-    //       4,
-    //       0
-    //     ],
-    //     19,
-    //     [
-    //       "match",
-    //       ["get", "number"],
-    //       1,
-    //       -50,
-    //       2,
-    //       -40,
-    //       3,
-    //       -30,
-    //       4,
-    //       -20,
-    //       5,
-    //       -10,
-    //       6,
-    //       0,
-    //       7,
-    //       10,
-    //       8,
-    //       20,
-    //       9,
-    //       30,
-    //       10,
-    //       40,
-    //       11,
-    //       55,
-    //       12,
-    //       60,
-    //       13,
-    //       -60,
-    //       14,
-    //       3,
-    //       0
-    //     ]
-    //   ]
     },
     "filter": ["in", "route_id", ""]
     }); 
@@ -261,17 +187,17 @@ map.on('load', () => {
     }
   });
     
-//   map.addLayer({
-//         id: 'data',
-//         type: 'circle',
-//         source: 'circleData',
-//         paint: {
-//             "circle-radius": initialRadius,
-//             "circle-radius-transition": {duration: 0},
-//             "circle-opacity-transition": {duration: 0},
-//             "circle-color": "#2EA7F9"
-//         },
-//     });
+  map.addLayer({
+        id: 'data',
+        type: 'circle',
+        source: 'circleData',
+        paint: {
+            "circle-radius": initialRadius,
+            "circle-radius-transition": {duration: 0},
+            "circle-opacity-transition": {duration: 0},
+            "circle-color": "#2EA7F9"
+        },
+    });
       map.addLayer({
         id: 'data1',
         type: 'circle',
@@ -284,22 +210,22 @@ map.on('load', () => {
         },
     });
 
-//  function animateMarker(timestamp) {
-//         setTimeout(function(){
-//             requestAnimationFrame(animateMarker);
-//             radius += (maxRadius - radius) / framesPerSecond;
-//             opacity -= ( .9 / framesPerSecond );
-//             map.setPaintProperty('data', 'circle-radius', radius);
-//             map.setPaintProperty('data', 'circle-opacity', opacity);
-//             if (opacity <= 0) {
-//                 radius = initialRadius;
-//                 opacity = initialOpacity;
-//             } 
-//         }, 1000 / framesPerSecond);
+ function animateMarker(timestamp) {
+        setTimeout(function(){
+            requestAnimationFrame(animateMarker);
+            radius += (maxRadius - radius) / framesPerSecond;
+            opacity -= ( .9 / framesPerSecond );
+            map.setPaintProperty('data', 'circle-radius', radius);
+            map.setPaintProperty('data', 'circle-opacity', opacity);
+            if (opacity <= 0) {
+                radius = initialRadius;
+                opacity = initialOpacity;
+            } 
+        }, 1000 / framesPerSecond);
         
-//     }
-//     // Start the animation.
-//     animateMarker(0);
+    }
+    // Start the animation.
+    animateMarker(0);
 
      map.on('data', function(e) {
             if (e.dataType === 'source' && e.sourceId === 'roads') {
