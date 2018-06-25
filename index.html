@@ -41,7 +41,7 @@ var maxRadius = 25;
 map.on('load', () => {
     map.addSource("routes", {
         type: "geojson",
-        data: "https://raw.githubusercontent.com/lena-emaya/m3avgspeed/master/data/4lena.geojson"
+        data: "https://raw.githubusercontent.com/lena-emaya/m3avgspeed/master/data/m3avg.geojson"
     });
     map.addSource('circleData', {
         type: 'geojson',
@@ -85,7 +85,6 @@ map.on('load', () => {
         ["get", "avg_speed"],
         0,
         "#CFC4D4",
-        
         1,
         "#471351",
         5,
@@ -178,119 +177,66 @@ map.on('load', () => {
     //     ]
     //   ]
     },
-    "filter": ["in", "muid", ""]
+    "filter": ["in", "route_id", ""]
     });
     
     
-    // map.addLayer({
-    //     "id": "shield",
-    //     "type": "symbol",
-    //     "source": "routes",
-    //     "layout": {
-    //   "text-field": [
-    //     "to-string",
-    //     ["get", "number"]
-    //   ],
-    //   "symbol-placement": "line",
-    //   "text-size": 11,
-    //   "icon-size": 0.5,
-    //   "symbol-spacing": 300,
-    //   "icon-image": "bus_shield",
-    //   "visibility": "none"
-    // },
-    //     "paint": {
-    //   "text-color": "hsl(0, 4%, 100%)",
-    //         "icon-opacity": 1
-    //     }
-    // });
+    map.addLayer({
+        "id": "shield",
+        "type": "symbol",
+        "source": "routes",
+        "layout": {
+      "text-field": [
+        "to-string",
+        ["get", "number"]
+      ],
+      "symbol-placement": "line",
+      "text-size": 11,
+      "icon-size": 0.5,
+      "symbol-spacing": 300,
+      "icon-image": "bus_shield",
+      "visibility": "none"
+    },
+        "paint": {
+      "text-color": "hsl(0, 4%, 100%)",
+            "icon-opacity": 1
+        }
+    });
   
     
     
     
-//     map.addLayer({
-//     "id": "shield-light",
-//     "type": "symbol",
-//     "source": "routes",
-//     "layout": {
-//       "text-field": [
-//         "to-string",
-//         ["get", "number"]
-//       ],
-//       "symbol-placement": "line",
-//       "text-size": [
-//         "interpolate",
-//         ["linear"],
-//         ["zoom"],
-//         10,
-//         8,
-//         22,
-//         11
-//       ],
-//       "icon-size": 0.65,
-//       "icon-text-fit-padding": [0.05,0.05,0.05,0.05],
-//       "symbol-spacing": 300,
-//       "icon-image": [
-//             "match",
-//             ["get", "color_id"],
-//             1,
-//             "bus_shield_1",
-//             2,
-//             "bus_shield_2",
-//             3,
-//             "bus_shield_3",
-//             4,
-//             "bus_shield_4",
-//             5,
-//             "bus_shield_5",
-//             6,
-//             "bus_shield_6",
-//             7,
-//             "bus_shield_7",
-//             8,
-//             "bus_shield_8",
-//             9,
-//             "bus_shield_9",
-//             10,
-//             "bus_shield_10",
-//             11,
-//             "bus_shield_11",
-//             12,
-//             "bus_shield_12",
-//             13,
-//             "bus_shield_13",
-//             14,
-//             "bus_shield_14",
-//             15,
-//             "bus_shield_15",
-//             "bus_shield_16"
-//         ],
-//       "icon-allow-overlap": false,
-//       // "icon-offset": [
-//       //     "match",
-//       //     ["get", "number"],
-//       //     "М7", ["literal",[2,0]],
-//       //     "Т10",
-//       //     ["literal",[3,0]],
-//       //     "М9",
-//       //     ["literal",[4,0]],
-//       //     "М3",
-//       //     ["literal",[1,0]],
-//       //     "М4",
-//       //     ["literal",[6,0]],
-//       //     "255",
-//       //     ["literal",[7,0]],
-//       //     "904",
-//       //     ["literal",[8,0]],
-//       //     "Т25",
-//       //     ["literal",[1,0]],
-//       //     ["literal",[0,0]]
-//       // ]
-//     },
-//     "paint": {
-//       "text-color": "hsl(0, 4%, 100%)",
-//       "icon-opacity": 1
-//     }
-//   });
+    map.addLayer({
+    "id": "shield-light",
+    "type": "symbol",
+    "source": "routes",
+    "layout": {
+      "text-field": [
+        "to-string",
+        ["get", "number"]
+      ],
+      "symbol-placement": "line",
+      "text-size": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        8,
+        22,
+        11
+      ],
+      "icon-size": 0.65,
+      "icon-text-fit-padding": [0.05,0.05,0.05,0.05],
+      "symbol-spacing": 300,
+      "icon-image": "bus_shield",
+      "icon-allow-overlap": false,
+      
+    },
+    "paint": {
+      "text-color": "hsl(0, 4%, 100%)",
+      "icon-opacity": 1
+    }
+  });
     
   map.addLayer({
         id: 'data',
@@ -334,22 +280,22 @@ map.on('load', () => {
 
   map.on('click', e => {
         const bbox = [
-        [e.point.x - 60, e.point.y - 60],
-        [e.point.x + 60, e.point.y + 60]
+        [e.point.x - 10, e.point.y - 10],
+        [e.point.x + 10, e.point.y + 10]
         ];
         const features = map.queryRenderedFeatures(bbox, {
         layers: ['routes']
     });
         const filter = features.reduce((memo, feature) => {
-            memo.push(feature.properties.muid);
+            memo.push(feature.properties.route_id);
       return memo;
-        }, ['in', 'muid']);
+        }, ['in', 'route_id']);
     const lngLat = Object.values(e.lngLat);
     const points = turf.featureCollection([
         turf.point(lngLat)
     ]);
         map.setFilter("routes-light", filter);
-        //map.setFilter("shield-light", filter);
+        map.setFilter("shield-light", filter);
     map.getSource('circleData').setData(points);
     });
 });
