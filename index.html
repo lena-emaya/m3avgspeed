@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>m3_test</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
+
+
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoibGVuYWVtYXlhIiwiYSI6ImNpa3VhbXE5ZjAwMXB3eG00ajVyc2J6ZTIifQ.kmZ4yVcNrupl4H8EonM3aQ';
+const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/lenaemaya/cjiog3lqk0osj2spbg2kd4uei',
+    center: [37.623140, 55.755509],
+    minZoom: 8,
+    zoom: 9.5
+});
+
+
+
+var framesPerSecond = 15; 
+var initialOpacity = 1
+var opacity = initialOpacity;
+var initialRadius = 12;
+var radius = initialRadius;
+var maxRadius = 25;
+
+map.on('load', () => {
+    map.addSource("routes", {
+        type: "geojson",
+        data: "https://raw.githubusercontent.com/lena-emaya/m3routes/master/route_color.geojson"
+    });
+    map.addSource('circleData', {
+        type: 'geojson',
+        data: {
+            type: 'FeatureCollection',
+            features: [],
+        },
+    });
+  
+   
+    map.addLayer({
+        id: "routes",
+        type: "line",
+        source: "routes",
+        paint: {
+            "line-width": 1.5,
+            "line-color": [
+                "match",
+                ["get", "color_id"],
+                1,
+                "hsl(0, 84%, 64%)",
+                2,
+                "hsl(257, 84%, 52%)",
+                3,
+                "hsl(86, 96%, 53%)",
+                4,
+                "hsl(190, 97%, 60%)",
+                5,
+                "hsl(242, 74%, 49%)",
+                6,
+                "hsl(0, 86%, 69%)",
+                7,
+                "hsl(138, 93%, 26%)",
+                8,
+                "hsl(230, 56%, 73%)",
+                "hsl(311, 86%, 69%)"
+      ],
+      "line-opacity": 0
+    }
+    });
+   
+    
+    map.addLayer({
+    id: "routes-light",
+    type: "line",
+    source: "routes",
+    paint: {
+      "line-width": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        2,
+        22,
+        8.5
+      ],
+      "line-opacity": 1,
+      "line-color": [
+        "match",
+        ["get", "color_id"],
+        1,
+        "#FF005D",
+        2,
+        "#B566FF",
+        3,
+        "#0BB4C1",
+        4,
+        "#00D49D",
+        5,
+        "#FEDF03",
+        6,
+        "#0030FF",
+        7,
+        "#AD00CC",
+        8,
+        "#FA009C",
+        9,
+        "#94FD4F",
+        10,
+        "#049649",
+        11,
+        "#003972",
+        12,
+        "#340652",
+        13,
+        "#F0AD4E",
+        14,
+        "#FF392D",
+        15,
+        "#2EA7F9",
+        "#898787"
+      ],
+      "line-offset": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        9,
+        [
+          "match",
+          ["get", "color_id"],
+          1,
+          -5,
+          2,
+          -4,
+          3,
+          -3,
+          4,
+          -2,
+          5,
+          -1,
+          6,
+          2,
+          7,
+          3,
+          8,
+          1,
+          9,
+          4,
+          10,
+          3.7,
+          11,
+          1.7,
+          12,
+          2.4,
+          13,
+          3.6,
+          14,
+          4,
+          0
+        ],
+        19,
+        [
+          "match",
+          ["get", "number"],
+          1,
+          -50,
+          2,
+          -40,
+          3,
+          -30,
+          4,
+          -20,
+          5,
+          -10,
+          6,
+          0,
+          7,
+          10,
+          8,
+          20,
+          9,
+          30,
+          10,
+          40,
+          11,
+          55,
+          12,
+          60,
+          13,
+          -60,
+          14,
+          3,
+          0
+        ]
+      ]
+    },
+    "filter": ["in", "route_muid", ""]
+    });
+    
+    
+    map.addLayer({
+        "id": "shield",
+        "type": "symbol",
+        "source": "routes",
+        "layout": {
+      "text-field": [
+        "to-string",
+        ["get", "number"]
+      ],
+      "symbol-placement": "line",
+      "text-size": 11,
+      "icon-size": 0.5,
+      "symbol-spacing": 300,
+      "icon-image": "bus_shield",
+      "visibility": "none"
+    },
+        "paint": {
+      "text-color": "hsl(0, 4%, 100%)",
+            "icon-opacity": 1
+        }
+    });
+  
+    
+    
+    
+    map.addLayer({
+    "id": "shield-light",
+    "type": "symbol",
+    "source": "routes",
+    "layout": {
+      "text-field": [
+        "to-string",
+        ["get", "number"]
+      ],
+      "symbol-placement": "line",
+      "text-size": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        8,
+        22,
+        11
+      ],
+      "icon-size": 0.65,
+      "icon-text-fit-padding": [0.05,0.05,0.05,0.05],
+      "symbol-spacing": 300,
+      "icon-image": [
+            "match",
+            ["get", "color_id"],
+            1,
+            "bus_shield_1",
+            2,
+            "bus_shield_2",
+            3,
+            "bus_shield_3",
+            4,
+            "bus_shield_4",
+            5,
+            "bus_shield_5",
+            6,
+            "bus_shield_6",
+            7,
+            "bus_shield_7",
+            8,
+            "bus_shield_8",
+            9,
+            "bus_shield_9",
+            10,
+            "bus_shield_10",
+            11,
+            "bus_shield_11",
+            12,
+            "bus_shield_12",
+            13,
+            "bus_shield_13",
+            14,
+            "bus_shield_14",
+            15,
+            "bus_shield_15",
+            "bus_shield_16"
+        ],
+      "icon-allow-overlap": false,
+      // "icon-offset": [
+      //     "match",
+      //     ["get", "number"],
+      //     "М7", ["literal",[2,0]],
+      //     "Т10",
+      //     ["literal",[3,0]],
+      //     "М9",
+      //     ["literal",[4,0]],
+      //     "М3",
+      //     ["literal",[1,0]],
+      //     "М4",
+      //     ["literal",[6,0]],
+      //     "255",
+      //     ["literal",[7,0]],
+      //     "904",
+      //     ["literal",[8,0]],
+      //     "Т25",
+      //     ["literal",[1,0]],
+      //     ["literal",[0,0]]
+      // ]
+    },
+    "paint": {
+      "text-color": "hsl(0, 4%, 100%)",
+      "icon-opacity": 1
+    }
+  });
+    
+  map.addLayer({
+        id: 'data',
+        type: 'circle',
+        source: 'circleData',
+        paint: {
+            "circle-radius": initialRadius,
+            "circle-radius-transition": {duration: 0},
+            "circle-opacity-transition": {duration: 0},
+            "circle-color": "#2EA7F9"
+        },
+    });
+      map.addLayer({
+        id: 'data1',
+        type: 'circle',
+        source: 'circleData',
+        paint: {
+            "circle-radius": 4,
+            "circle-color": "#2EA7F9",
+            "circle-stroke-width": 2,
+            "circle-stroke-color": "#fff"
+        },
+    });
+
+ function animateMarker(timestamp) {
+        setTimeout(function(){
+            requestAnimationFrame(animateMarker);
+            radius += (maxRadius - radius) / framesPerSecond;
+            opacity -= ( .9 / framesPerSecond );
+            map.setPaintProperty('data', 'circle-radius', radius);
+            map.setPaintProperty('data', 'circle-opacity', opacity);
+            if (opacity <= 0) {
+                radius = initialRadius;
+                opacity = initialOpacity;
+            } 
+        }, 1000 / framesPerSecond);
+        
+    }
+    // Start the animation.
+    animateMarker(0);
+
+  map.on('click', e => {
+        const bbox = [
+        [e.point.x - 10, e.point.y - 10],
+        [e.point.x + 10, e.point.y + 10]
+        ];
+        const features = map.queryRenderedFeatures(bbox, {
+        layers: ['routes']
+    });
+        const filter = features.reduce((memo, feature) => {
+            memo.push(feature.properties.route_muid);
+      return memo;
+        }, ['in', 'route_muid']);
+    const lngLat = Object.values(e.lngLat);
+    const points = turf.featureCollection([
+        turf.point(lngLat)
+    ]);
+        map.setFilter("routes-light", filter);
+        map.setFilter("shield-light", filter);
+    map.getSource('circleData').setData(points);
+    });
+});
+</script>
+
+</body>
+</html>
