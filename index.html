@@ -101,6 +101,98 @@ map.on('load', () => {
       "line-opacity": 0
     }
     });
+
+    map.addLayer({
+    id: "routes-light1",
+    type: "line",
+    source: "roads",
+    paint: {
+      "line-width": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        3,
+        22,
+        9.5
+      ],
+      "line-opacity": 1,
+      "line-color":  [ 
+                    "step", 
+                    [ 
+                        "get", 
+                        "inerval"
+                    ], 
+                    "#7CC5F4", 
+                    10, 
+                    "#7CC5F4", 
+                    20, 
+                    "#7CC5F4", 
+                    30, 
+                    "#7CC5F4"
+                ],
+       "line-offset": [
+  "interpolate",
+  ["linear"],
+  ["zoom"],
+  10,
+  [
+    "interpolate",
+    ["linear"],
+    ["get", "offset"],
+    1,
+    0.5,
+    2,
+    1.2,
+    3,
+    1.95,
+    4,
+    -0.5,
+    5,
+    -1.2,
+    6,
+    -1.95,
+    7,
+    -2.65,
+    8,
+    -3.5,
+    9,
+    3.5,
+    10,
+    0
+  ],
+  18,
+  [
+    "interpolate",
+    ["linear"],
+    ["get", "offset"],
+    1,
+    1.75,
+    2,
+    4,
+    3,
+    6.5,
+    4,
+    -1.75,
+    5,
+    -4,
+    6,
+    -6.5,
+    7,
+    -8,
+    8,
+    -10.3,
+    9,
+    10.3,
+    10,
+    0
+  ]
+]
+    },
+    "filter": ["in", "route_muid", ""]
+    }); 
+
+
     map.addLayer({
     id: "routes-light",
     type: "line",
@@ -190,6 +282,11 @@ map.on('load', () => {
     },
     "filter": ["in", "route_muid", ""]
     }); 
+    
+    
+    
+    
+    
     map.addLayer({
         id: "shield",
         type: "symbol",
@@ -295,6 +392,7 @@ map.on('load', () => {
     const points = turf.featureCollection([
         turf.point(lngLat)
     ]);
+        map.setFilter("routes-light1", filter);
         map.setFilter("routes-light", filter);
         map.setFilter("shield-light", filter);
     map.getSource('circleData').setData(points);
