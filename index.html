@@ -78,8 +78,8 @@ var maxRadius = 25;
 
 map.on('load', () => {
     map.addSource('roads', {
-        type: 'vector',
-        tiles: ["https://m3.urbica.co/tiles/public.len/{z}/{x}/{y}.pbf"],
+        type: 'geojson',
+        data: "https://raw.githubusercontent.com/lena-emaya/m3avgspeed/master/data/inter.geojson",
     });
     map.addSource('circleData', {
         type: 'geojson',
@@ -94,7 +94,6 @@ map.on('load', () => {
         id: "routes",
         type: "line",
         source: "roads",
-        'source-layer': 'public.len',
         paint: {
             "line-width": 1.5,
             "line-color": 
@@ -106,7 +105,6 @@ map.on('load', () => {
     id: "routes-light",
     type: "line",
     source: "roads",
-    'source-layer': 'public.len',
     paint: {
       "line-width": [
         "interpolate",
@@ -118,36 +116,27 @@ map.on('load', () => {
         8.5
       ],
       "line-opacity": 1,
-      "line-color": ["interpolate",
-        ["linear"],
-        ["get", "avg_speed"],
-        0,
-        "#CFC4D4",
-        1,
-        "#471351",
-        5,
-        "#CE0E2E",
-        8,
-        "#F64422",
-        10,
-        "#FDAD49",
-        12,
-        "#FEF04D",
-        14,
-        "#FEFB89",
-        16,
-        "#D0F78C",
-        20,
-        "#2CEA62"
-      ]
+      "line-color":  [ 
+                    "step", 
+                    [ 
+                        "get", 
+                        "inerval"
+                    ], 
+                    "#ff1a40", 
+                    10, 
+                    "#ffe366", 
+                    20, 
+                    "hsl(177, 90%, 55%)", 
+                    30, 
+                    "hsl(125, 87%, 67%)"
+                ]
     },
-    "filter": ["in", "route_id", ""]
+    "filter": ["in", "route_muid", ""]
     }); 
     map.addLayer({
         id: "shield",
         type: "symbol",
         source: "roads",
-        'source-layer': 'public.len',
         "layout": {
       "visibility": "none"
     },
@@ -158,7 +147,6 @@ map.on('load', () => {
     "id": "shield-light",
     "type": "symbol",
     source: "roads",
-    'source-layer': 'public.len',
     "layout": {
       "text-field": [
         "to-string",
@@ -242,9 +230,9 @@ map.on('load', () => {
         layers: ['routes']
     });
         const filter = features.reduce((memo, feature) => {
-            memo.push(feature.properties.route_id);
+            memo.push(feature.properties.route_muid);
       return memo;
-        }, ['in', 'route_id']);
+        }, ['in', 'route_muid']);
     const lngLat = Object.values(e.lngLat);
     const points = turf.featureCollection([
         turf.point(lngLat)
