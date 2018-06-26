@@ -129,7 +129,40 @@ map.on('load', () => {
                     "hsl(177, 90%, 55%)", 
                     30, 
                     "hsl(125, 87%, 67%)"
-                ]
+                ],
+       "line-offset": [
+  "interpolate",
+  ["linear"],
+  ["zoom"],
+  9,
+  [
+    "interpolate",
+    ["linear"],
+    ["get", "id"],
+    10,
+    3,
+    20,
+    5,
+    40,
+    6,
+    467,
+    0
+  ],
+  22,
+  [
+    "interpolate",
+    ["linear"],
+    ["get", "id"],
+    10,
+    10,
+    20,
+    20,
+    40,
+    30,
+    467,
+    0
+  ]
+]
     },
     "filter": ["in", "route_muid", ""]
     }); 
@@ -172,7 +205,8 @@ map.on('load', () => {
     "paint": {
       "text-color": "hsl(0, 4%, 100%)",
       "icon-opacity": 1
-    }
+    },
+    "filter": ["in", "route_muid", ""]
   });
     
   map.addLayer({
