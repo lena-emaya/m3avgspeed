@@ -22,7 +22,6 @@
                 width: 100%;
             }
             
-
             
             .loader {
                 height: 150px;
@@ -66,16 +65,12 @@ const map = new mapboxgl.Map({
     minZoom: 8,
     zoom: 9.5
 });
-
-
-
 var framesPerSecond = 15; 
 var initialOpacity = 1
 var opacity = initialOpacity;
 var initialRadius = 12;
 var radius = initialRadius;
 var maxRadius = 25;
-
 map.on('load', () => {
     map.addSource('roads', {
         type: 'geojson',
@@ -101,41 +96,20 @@ map.on('load', () => {
       "line-opacity": 0
     }
     });
-
     map.addLayer({
-    id: "routes-light",
+    id: "routes-light1",
     type: "line",
     source: "roads",
     paint: {
       "line-width": [
-  "interpolate",
-  ["linear"],
-  ["zoom"],
-  9,
-  [
-    "interpolate",
-    ["linear"],
-    ["get", "inerval"],
-    12,
-    2.5,
-    24,
-    1.7,
-    40,
-    1
-  ],
-  22,
-  [
-    "interpolate",
-    ["linear"],
-    ["get", "inerval"],
-    12,
-    9,
-    24,
-    5,
-    40,
-    2.5
-  ]
-],
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        2.8,
+        22,
+        9.3
+      ],
       "line-opacity": 1,
       "line-color":  [ 
                     "step", 
@@ -143,26 +117,14 @@ map.on('load', () => {
                         "get", 
                         "inerval"
                     ], 
-                    "#db172b", 
-                    4.634, 
-                    "#ea3112", 
-                    9.018, 
-                    "#f36a12", 
-                    14.000, 
-                    "#f9a715",
-                    19.500,
-                    "#ffe519", 
-                    24.622, 
-                    "#7fef18", 
-                    28.128, 
-                    "#1fd73c", 
-                    32.000, 
-                    "#2cb99b",
-                    36.846,
-                    "#36729e",
-                    40.000,
-                    "#36729e"
-                ], 
+                    "#FFFFFF", 
+                    50, 
+                    "#FFFFFF", 
+                    60, 
+                    "#FFFFFF", 
+                    70, 
+                    "#FFFFFF"
+                ],
        "line-offset": [
   "interpolate",
   ["linear"],
@@ -171,145 +133,147 @@ map.on('load', () => {
   [
     "interpolate",
     ["linear"],
-    ["get", "inerval"],
-    4.634,
-    10,
-    9.018,
-    6,
-    14.000,
-    3,
-    19.500,
-    1.5,
-    24.622,
+    ["get", "offset"],
+    1,
     0.5,
-    28.128,
+    2,
+    1.2,
+    3,
+    1.95,
+    4,
     -0.5,
-    32.000,
-    -1.5,
-    36.846,
-    -3,
-    40.000,
+    5,
+    -1.2,
+    6,
+    -1.95,
+    7,
+    -2.65,
+    8,
+    -3.5,
+    9,
+    3.5,
+    10,
     0
   ],
-  22,
+  18,
   [
     "interpolate",
     ["linear"],
-    ["get", "inerval"],
-    4.634,
-    50,
-    9.018,
-    30,
-    14.000,
-    10,
-    19.500,
-    5,
-    24.622,
+    ["get", "offset"],
     1,
-    28.128,
-    -5,
-    32.000,
-    -10,
-    36.846,
-    -30,
-    40.000,
+    1.75,
+    2,
+    4,
+    3,
+    6.5,
+    4,
+    -1.75,
+    5,
+    -4,
+    6,
+    -6.5,
+    7,
+    -8,
+    8,
+    -10.3,
+    9,
+    10.3,
+    10,
     0
-    ]
+  ]
 ]
     },
     "filter": ["in", "route_muid", ""]
     }); 
-
-
-//     map.addLayer({
-//     id: "routes-light",
-//     type: "line",
-//     source: "roads",
-//     paint: {
-//       "line-width": [
-//         "interpolate",
-//         ["linear"],
-//         ["zoom"],
-//         10,
-//         2,
-//         22,
-//         8.5
-//       ],
-//       "line-opacity": 1,
-//       "line-color":  [ 
-//                     "step", 
-//                     [ 
-//                         "get", 
-//                         "inerval"
-//                     ], 
-//                     "#ff1a40", 
-//                     16, 
-//                     "#FFC533", 
-//                     30, 
-//                     "#36E0FF", 
-//                     54, 
-//                     "hsl(125, 87%, 67%)"
-//                 ],
-//        "line-offset":[
-//   "interpolate",
-//   ["linear"],
-//   ["zoom"],
-//   10,
-//   [
-//     "interpolate",
-//     ["linear"],
-//     ["get", "offset"],
-//     1,
-//     0.5,
-//     2,
-//     1.2,
-//     3,
-//     1.95,
-//     4,
-//     -0.5,
-//     5,
-//     -1.2,
-//     6,
-//     -1.95,
-//     7,
-//     -2.65,
-//     8,
-//     -3.5,
-//     9,
-//     3.5,
-//     10,
-//     0
-//   ],
-//   18,
-//   [
-//     "interpolate",
-//     ["linear"],
-//     ["get", "offset"],
-//     1,
-//     1.75,
-//     2,
-//     4,
-//     3,
-//     6.5,
-//     4,
-//     -1.75,
-//     5,
-//     -4,
-//     6,
-//     -6.5,
-//     7,
-//     -8,
-//     8,
-//     -10.3,
-//     9,
-//     10.3,
-//     10,
-//     0
-//   ]
-// ]
-//     },
-//     "filter": ["in", "route_muid", ""]
-//     }); 
+    map.addLayer({
+    id: "routes-light",
+    type: "line",
+    source: "roads",
+    paint: {
+      "line-width": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10,
+        2,
+        22,
+        8.5
+      ],
+      "line-opacity": 1,
+      "line-color":  [ 
+                    "step", 
+                    [ 
+                        "get", 
+                        "inerval"
+                    ], 
+                    "#ff1a40", 
+                    16, 
+                    "#FFC533", 
+                    30, 
+                    "#36E0FF", 
+                    54, 
+                    "hsl(125, 87%, 67%)"
+                ],
+       "line-offset":[
+  "interpolate",
+  ["linear"],
+  ["zoom"],
+  10,
+  [
+    "interpolate",
+    ["linear"],
+    ["get", "offset"],
+    1,
+    0.5,
+    2,
+    1.2,
+    3,
+    1.95,
+    4,
+    -0.5,
+    5,
+    -1.2,
+    6,
+    -1.95,
+    7,
+    -2.65,
+    8,
+    -3.5,
+    9,
+    3.5,
+    10,
+    0
+  ],
+  18,
+  [
+    "interpolate",
+    ["linear"],
+    ["get", "offset"],
+    1,
+    1.75,
+    2,
+    4,
+    3,
+    6.5,
+    4,
+    -1.75,
+    5,
+    -4,
+    6,
+    -6.5,
+    7,
+    -8,
+    8,
+    -10.3,
+    9,
+    10.3,
+    10,
+    0
+  ]
+]
+    },
+    "filter": ["in", "route_muid", ""]
+    }); 
     
     
     
@@ -380,7 +344,6 @@ map.on('load', () => {
             "circle-stroke-color": "#fff"
         },
     });
-
  function animateMarker(timestamp) {
         setTimeout(function(){
             requestAnimationFrame(animateMarker);
@@ -397,13 +360,11 @@ map.on('load', () => {
     }
     // Start the animation.
     animateMarker(0);
-
      map.on('data', function(e) {
             if (e.dataType === 'source' && e.sourceId === 'roads') {
                 document.getElementById("loader").style.visibility = "hidden";
             }
         })
-
   map.on('click', e => {
         const bbox = [
         [e.point.x - 10, e.point.y - 10],
@@ -420,7 +381,7 @@ map.on('load', () => {
     const points = turf.featureCollection([
         turf.point(lngLat)
     ]);
-        //map.setFilter("routes-light1", filter);
+        map.setFilter("routes-light1", filter);
         map.setFilter("routes-light", filter);
         map.setFilter("shield-light", filter);
     map.getSource('circleData').setData(points);
